@@ -173,13 +173,21 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
             {/* success msg */}
             {successMsg && (
               <p className="p-2 rounded-lg text-green-600 bg-green-600/10 border border-green-600 text-xs">
-                Thanks, aaaa! Your request is ready. We'll be in touch.
+                Thanks, {form.full_name}! Your request is ready. We'll be in touch.
               </p>
             )}
           </div>
           {/* close btn */}
           <button
-            onClick={() => onClose()}
+            onClick={() => {
+                setForm({
+                    full_name: "",
+                    email: "",
+                    phoneNumber: "",
+                    prm: "3 months"
+                })
+                onClose()
+            }}
             className="absolute top-5 right-5 cursor-pointer"
           >
             <XCircle />
