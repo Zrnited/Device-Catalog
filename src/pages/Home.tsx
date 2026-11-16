@@ -17,19 +17,15 @@ interface ProductHandler {
 interface Filter {
   name: string;
   category: string;
-  price: string;
 }
 
 export default function Home() {
-  //   const devices: { name: string; value: string } = [];
-  //   const prices: { name: string; value: string } = [];
   const [product, setProduct] = useState<Product | null>(null);
   const [filteredData, setFilteredData] = useState<Product[]>([]);
   const [showProductModal, setShowProductModal] = useState<boolean>(false);
   const [filter, setFilter] = useState<Filter>({
     name: "",
     category: "all",
-    price: "any",
   });
 
   const handleChange = (
@@ -86,49 +82,40 @@ export default function Home() {
     setFilter({
       name: "",
       category: "all",
-      price: "any",
     });
   }, [products]);
 
   useEffect(() => {
     if (!products.data) return;
     //filter by default
-    if (
-      filter.name === "" &&
-      filter.category === "all" &&
-      filter.price === "any"
-    ) {
+    if (filter.name.trim() === "" && filter.category === "all") {
       setFilteredData(products.data);
       return;
     }
     //filter by name alone
-    if (
-      filter.name.toLowerCase() !== "" &&
-      filter.category === "all" &&
-      filter.price === "any"
-    ) {
-        console.log("Reading...")
+    if (filter.name.trim().toLowerCase() !== "" && filter.category === "all") {
       const results = products.data?.filter((product) =>
         product.title.toLowerCase().includes(filter.name.toLowerCase()),
       );
       setFilteredData(results);
       return;
     }
-    //filter by name and category and price
-    // if (search.keyword.toLowerCase() !== "" && search.grade !== "all") {
-    //   const results = employees.data?.filter(
-    //     (staff) =>
-    //       staff.name.toLowerCase().includes(search.keyword.toLowerCase()) &&
-    //       staff.gradeLevel?.id === search.grade,
-    //   );
-    //   setData(results);
-    //   return;
-    // }
-    // //grade alone
-    // const results = employees.data?.filter(
-    //   (staff) => staff.gradeLevel?.id === search.grade,
-    // );
-    // setData(results);
+    // filter by name and category
+    if (filter.name.trim().toLowerCase() !== "" && filter.category !== "all") {
+      const results = products.data?.filter(
+        (product) =>
+          product.title.toLowerCase().includes(filter.name.toLowerCase()) &&
+          product.category === filter.category &&
+          product.price,
+      );
+      setFilteredData(results);
+      return;
+    }
+    //category alone
+    const results = products.data?.filter(
+      (product) => product.category === filter.category,
+    );
+    setFilteredData(results);
   }, [filter]);
 
   return (
@@ -193,22 +180,18 @@ export default function Home() {
           </div>
           {/* type of device */}
           <div className="relative">
-            <select className="border px-3 py-1 rounded-md h-12 appearance-none cursor-pointer w-full">
+            <select
+              onChange={handleChange}
+              name="category"
+              value={filter.category}
+              title="Category"
+              className="border px-3 py-1 rounded-md h-12 appearance-none cursor-pointer w-full"
+            >
               <option value={"all"}>All categories</option>
-              <option>Smartphones</option>
-              <option>Laptops</option>
-              <option>Tablets</option>
-              <option>Accessories</option>
-            </select>
-            <ChevronDown className="absolute right-3 top-3" />
-          </div>
-          {/* price */}
-          <div className="relative">
-            <select className="border px-3 py-1 rounded-md h-12 appearance-none cursor-pointer w-full">
-              <option value={"any"}>Any price</option>
-              <option>Under $500</option>
-              <option>$500 - $1000</option>
-              <option>Over $1000</option>
+              <option value={"beauty"}>Beauty</option>
+              <option value={"care"}>Care</option>
+              <option value={"fragrances"}>Fragrances</option>
+              <option value={"furniture"}>Furniture</option>
             </select>
             <ChevronDown className="absolute right-3 top-3" />
           </div>
