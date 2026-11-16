@@ -47,6 +47,12 @@ export default function Home() {
       if (cancelled) return;
       if (res.products)
         setProducts((prev) => ({ ...prev, data: res.products }));
+      //initiate
+      setFilteredData(res.products);
+      setFilter({
+        name: "",
+        category: "all",
+      });
     } catch (e: any) {
       const err = e as ApiError;
       if (cancelled) return;
@@ -75,15 +81,6 @@ export default function Home() {
     if (!product) return;
     setShowProductModal(true);
   }, [product]);
-
-  useEffect(() => {
-    if (!products.data) return;
-    setFilteredData(products.data);
-    setFilter({
-      name: "",
-      category: "all",
-    });
-  }, [products]);
 
   useEffect(() => {
     if (!products.data) return;
