@@ -1,4 +1,4 @@
-import { ChevronDown, Heart, Star } from "lucide-react";
+import { ChevronDown, Heart, Star, XCircle } from "lucide-react";
 import type { Product } from "../../types";
 
 interface Props {
@@ -10,10 +10,9 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
   return (
     <div className="w-full h-screen fixed top-0 bottom-0 left-0 right-0 z-20">
       <div
-        onClick={() => onClose()}
         className="w-full h-full flex flex-col gap-y-1 justify-center items-center right-0 bg-[#000000]/70 backdrop-blur-md"
       >
-        <div className="bg-white py-6 px-5 rounded-lg w-[90%] space-y-1 lg:p-8 max-h-150 activity overflow-y-scroll flex flex-col gap-3 lg:max-w-[80%] xl:flex-row">
+        <div className="bg-white py-6 px-5 rounded-lg w-[90%] space-y-1 lg:p-8 max-h-150 activity overflow-y-scroll flex flex-col gap-3 lg:max-w-[80%] xl:flex-row relative">
           {/* product details */}
           <div className="space-y-3 lg:w-1/2">
             <div className="space-y-2">
@@ -66,7 +65,7 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
                 repayment period.
               </p>
             </div>
-            <form className="space-y-2 w-full">
+            <form onSubmit={()=>{}} className="space-y-2 w-full">
               <div className="text-sm flex flex-col gap-y-1.5">
                 <label>Full name</label>
                 <input
@@ -111,6 +110,8 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
               </div>
             </form>
           </div>
+          {/* close btn */}
+          <button onClick={() => onClose()} className="absolute top-5 right-5 cursor-pointer"><XCircle /></button>
         </div>
       </div>
     </div>
