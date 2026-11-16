@@ -52,14 +52,14 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
           {/* product details */}
           <div className="space-y-3 lg:w-1/2">
             <div className="space-y-2">
-              <div className="bg-[#072320]/5 rounded-md w-full h-100">
+              <div className="bg-[#072320]/5 rounded-md w-full h-100 lg:h-80 flex items-center justify-center">
                 <img
                   src={product ? product?.images[0] : ""}
                   alt="product"
                   decoding="async"
                   loading="lazy"
                   draggable={false}
-                  className="w-full h-auto"
+                  className="w-[70%] h-fit"
                 />
               </div>
               {/* image list */}
