@@ -4,12 +4,14 @@ import { useState } from "react";
 
 interface Props {
   device: Product;
+  setProduct: React.Dispatch<React.SetStateAction<Product | null>>;
 }
 
-export default function ProductCard({ device }: Props) {
+export default function ProductCard({ device, setProduct }: Props) {
   const [hover, setHover] = useState<true | null>(null);
   return (
     <div
+      onClick={() => setProduct(device)}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(null)}
       className="border border-gray-500 rounded-md cursor-pointer hover:shadow-lg transition ease-in-out delay-100 bg-white relative"
@@ -21,6 +23,7 @@ export default function ProductCard({ device }: Props) {
           decoding="async"
           src={device.thumbnail ?? ""}
           className="w-[70%] h-auto"
+          draggable={false}
         />
       </div>
       <div className="p-5 space-y-2 rounded-b-md">
@@ -49,7 +52,12 @@ export default function ProductCard({ device }: Props) {
           {device.availabilityStatus}
         </p>
       )}
-      {hover && <ArrowRightCircle size={30} className="absolute right-3 top-3 animate-pulse text-primary" />}
+      {hover && (
+        <ArrowRightCircle
+          size={30}
+          className="absolute right-3 top-3 animate-pulse text-primary"
+        />
+      )}
     </div>
   );
 }

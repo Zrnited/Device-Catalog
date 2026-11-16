@@ -6,6 +6,7 @@ import type { ApiError } from "../lib/api";
 import { useEffect, useState } from "react";
 import type { Product } from "../types";
 import Products from "../components/home/products";
+import ProductDetailsModal from "../components/home/product-details-modal";
 
 interface ProductHandler {
   data: Product[] | null;
@@ -14,8 +15,10 @@ interface ProductHandler {
 }
 
 export default function Home() {
-//   const devices: { name: string; value: string } = [];
-//   const prices: { name: string; value: string } = [];
+  //   const devices: { name: string; value: string } = [];
+  //   const prices: { name: string; value: string } = [];
+  const [product, setProduct] = useState<Product | null>(null);
+  const [showProductModal, setShowProductModal] = useState<boolean>(false);
 
   const [products, setProducts] = useState<ProductHandler>({
     data: null,
@@ -47,6 +50,11 @@ export default function Home() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!product) return;
+    setShowProductModal(true);
+  }, [product]);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -130,7 +138,8 @@ export default function Home() {
         </div>
       </section>
       {/* devices */}
-        <Products products={products.data ?? []}  />
+      <Products setProduct={setProduct} products={products.data ?? []} />
+      {showProductModal && <ProductDetailsModal product={product ?? {} as Product} />}
       <Footer />
     </main>
   );
