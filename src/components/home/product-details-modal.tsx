@@ -40,9 +40,9 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     setFormErrs({
-      full_name: "",
-      email: "",
-      phone_number: "",
+      full_name: null,
+      email: null,
+      phone_number: null,
     });
     e.preventDefault();
     if (!form.full_name || !form.full_name.trim()) {
@@ -59,9 +59,9 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
       return;
     }
     setFormErrs({
-      full_name: "",
-      email: "",
-      phone_number: "",
+      full_name: null,
+      email: null,
+      phone_number: null,
     });
     setSuccessMsg(true);
   };
@@ -243,6 +243,11 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
                 email: "",
                 phoneNumber: "",
                 prm: "3 months",
+              });
+              setFormErrs({
+                full_name: null,
+                email: null,
+                phone_number: null,
               });
               onClose();
             }}
