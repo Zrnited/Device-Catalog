@@ -14,6 +14,12 @@ interface Form {
   prm: string;
 }
 
+interface FormErrs {
+  full_name: string | null;
+  email: string | null;
+  phone_number: string | null;
+}
+
 export default function ProductDetailsModal({ product, onClose }: Props) {
   const [form, setForm] = useState<Form>({
     full_name: "",
@@ -22,19 +28,38 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
     prm: "3 months",
   });
 
-  console.log(form);
   const [successMsg, setSuccessMsg] = useState<boolean>(false);
+  const [formErrs, setFormErrs] = useState<FormErrs>({
+    full_name: null,
+    email: null,
+    phone_number: null,
+  });
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    setFormErrs({
+      full_name: "",
+      email: "",
+      phone_number: "",
+    });
     e.preventDefault();
-    const errors: any = {};
-    if (!form.full_name || !form.full_name.trim())
-      errors["full_name"] = "Invalid phone number";
-    if (!form.email || !form.email.trim()) errors["email"] = "Invalid email";
-    if (!form.phoneNumber.trim())
-      errors["phone_number"] = "Invalid phone number";
-
-    console.log("Form: ", form);
+    if (!form.full_name || !form.full_name.trim()) {
+      setFormErrs((prev) => ({ ...prev, full_name: "Invalid name" }));
+    }
+    if (!form.email || !form.email.trim()) {
+      setFormErrs((prev) => ({ ...prev, email: "Invalid email" }));
+    }
+    if (!form.phoneNumber.trim()) {
+      setFormErrs((prev) => ({
+        ...prev,
+        phone_number: "Invalie phone number",
+      }));
+      return;
+    }
+    setFormErrs({
+      full_name: "",
+      email: "",
+      phone_number: "",
+    });
     setSuccessMsg(true);
   };
 
@@ -106,37 +131,48 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
                 <label>Full name</label>
                 <input
                   type="text"
-                  required
+                  //   required
                   placeholder="Alex Morgan"
                   name="full_name"
                   className="border w-full px-2.5 rounded-md h-10"
                   value={form.full_name}
                   onChange={handleChange}
                 />
+                {formErrs.full_name && (
+                  <p className="text-red-600 text-xs">{formErrs.full_name}</p>
+                )}
               </div>
               <div className="text-sm flex flex-col gap-y-1.5">
                 <label>Email address</label>
                 <input
                   type="email"
-                  required
+                  //   required
                   placeholder="you@example.com"
                   name="email"
                   value={form.email}
                   onChange={handleChange}
                   className="border w-full px-2.5 rounded-md h-10"
                 />
+                {formErrs.email && (
+                  <p className="text-red-600 text-xs">{formErrs.email}</p>
+                )}
               </div>
               <div className="text-sm flex flex-col gap-y-1.5">
                 <label>Phone number</label>
                 <input
                   type="text"
-                  required
+                  //   required
                   placeholder="+1 555 123 4567"
                   name="phoneNumber"
                   className="border w-full px-2.5 rounded-md h-10"
                   value={form.phoneNumber}
                   onChange={handleChange}
                 />
+                {formErrs.phone_number && (
+                  <p className="text-red-600 text-xs">
+                    {formErrs.phone_number}
+                  </p>
+                )}
               </div>
               <div className="text-sm flex flex-col gap-y-1.5">
                 <label>Preferred repayment method</label>
@@ -159,13 +195,13 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
                 </div>
               </div>
               <button
-                disabled={
-                  !form.email ||
-                  !form.full_name.trim() ||
-                  !form.phoneNumber.trim() ||
-                  !form.prm
-                }
-                className="h-10 bg-primary text-white w-full rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                // disabled={
+                //   !form.email ||
+                //   !form.full_name.trim() ||
+                //   !form.phoneNumber.trim() ||
+                //   !form.prm
+                // }
+                className="h-10 bg-primary/90 text-white w-full rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary transition ease-in-out delay-100 cursor-pointer"
               >
                 Submit
               </button>
@@ -173,20 +209,21 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
             {/* success msg */}
             {successMsg && (
               <p className="p-2 rounded-lg text-green-600 bg-green-600/10 border border-green-600 text-xs">
-                Thanks, {form.full_name}! Your request is ready. We'll be in touch.
+                Thanks, {form.full_name}! Your request is ready. We'll be in
+                touch.
               </p>
             )}
           </div>
           {/* close btn */}
           <button
             onClick={() => {
-                setForm({
-                    full_name: "",
-                    email: "",
-                    phoneNumber: "",
-                    prm: "3 months"
-                })
-                onClose()
+              setForm({
+                full_name: "",
+                email: "",
+                phoneNumber: "",
+                prm: "3 months",
+              });
+              onClose();
             }}
             className="absolute top-5 right-5 cursor-pointer"
           >
