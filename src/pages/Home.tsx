@@ -1,8 +1,53 @@
-import { ShieldCheck } from "lucide-react";
+import { ChevronDown, Search, ShieldCheck } from "lucide-react";
 import Footer from "../components/layout/footer";
 import Header from "../components/layout/header";
+import { getDevices } from "../api/getDevices";
+import type { ApiError } from "../lib/api";
+import { useEffect, useState } from "react";
+import type { Product } from "../types";
+import Products from "../components/home/products";
+
+interface ProductHandler {
+  data: Product[] | null;
+  error: string | null;
+  isLoading: boolean;
+}
 
 export default function Home() {
+//   const devices: { name: string; value: string } = [];
+//   const prices: { name: string; value: string } = [];
+
+  const [products, setProducts] = useState<ProductHandler>({
+    data: null,
+    error: null,
+    isLoading: true,
+  });
+
+  const fetchDevices = async (cancelled: boolean) => {
+    try {
+      const res = await getDevices();
+      if (cancelled) return;
+      if (res.products)
+        setProducts((prev) => ({ ...prev, data: res.products }));
+    } catch (e: any) {
+      const err = e as ApiError;
+      if (cancelled) return;
+      if (err.message) setProducts((prev) => ({ ...prev, error: err.message }));
+    } finally {
+      setProducts((prev) => ({ ...prev, isLoading: false }));
+    }
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchDevices(cancelled);
+
+    //track page exit
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Header />
@@ -32,7 +77,8 @@ export default function Home() {
           </span>
         </div>
       </section>
-      <section className="px-5 pb-20 pt-9 mx-auto w-full sm:px-8 sm:pt-12 lg:px-12">
+      <section className="px-5 pb-10 pt-9 mx-auto w-full sm:px-8 sm:pt-12 lg:px-12">
+        {/* heading text */}
         <div className="mb-7 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="mb-2 text-sm font-semibold text-primary">
@@ -47,7 +93,44 @@ export default function Home() {
             between.
           </p>
         </div>
+        {/* filter form */}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+          {/* text */}
+          <div className="relative">
+            <input
+              className="flex w-full border px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-12 rounded-md border-border pl-11"
+              aria-label="Search devices by name"
+              placeholder="Search devices…"
+              value=""
+              title="Search"
+            />
+            <Search className="absolute left-3 top-3" />
+          </div>
+          {/* type of device */}
+          <div className="relative">
+            <select className="border px-3 py-1 rounded-md h-12 appearance-none cursor-pointer w-full">
+              <option>All devices</option>
+              <option>Smartphones</option>
+              <option>Laptops</option>
+              <option>Tablets</option>
+              <option>Accessories</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-3" />
+          </div>
+          {/* price */}
+          <div className="relative">
+            <select className="border px-3 py-1 rounded-md h-12 appearance-none cursor-pointer w-full">
+              <option>Any price</option>
+              <option>Under $500</option>
+              <option>$500 - $1000</option>
+              <option>Over $1000</option>
+            </select>
+            <ChevronDown className="absolute right-3 top-3" />
+          </div>
+        </div>
       </section>
+      {/* devices */}
+        <Products products={products.data ?? []}  />
       <Footer />
     </main>
   );
