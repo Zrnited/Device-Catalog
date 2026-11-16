@@ -1,75 +1,83 @@
-# React + TypeScript + Vite
+# Device Catalog (Solution by Mayowa)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is an app where a customer can browse devices available for financing, view details, and submit a short financing-interest form.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+# Tech Stack
 
-## React Compiler
+- React
+- Vite
+- TypeScript
+- Tailwind CSS
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+# Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Follow the instructions below to run the project locally on your machine.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Prerequisites
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Make sure you have the following installed:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js (version 18 or higher recommended)
+- npm or yarn
 
+You can check your versions with:
+
+```bash
+node -v
+npm -v
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+# Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Clone the Repository: https://github.com/Zrnited/Device-Catalog
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Navigate into the project folder
+
+```bash
+cd device-catalog
+```
+
+3. Install dependencies
+
+```bash
+pnpm install
+```
+
+4. Run the Project Locally
+
+```bash
+pnpm start:dev
+```
+
+5. After running the command, open your browser and navigate to: http://localhost:1010
 
 ```
+# Environmental Variables
+
+Please include a ".env" file in the root folder of your project and add these credentials:
+
+```bash
+VITE_API_URL=https://dummyjson.com
+```
+
+# Manner of Approach
+
+1. Requirement Analysis: The project requirements were first reviewed to understand the expected functionality and user interactions.
+
+2. Project setup: The application was initialized using Vite to provide a fast development environment for the React application.
+
+3. Component-based Architecture: The UI was broken down into reusable components to ensure modularity and maintainability.
+
+
+4. Styling: Styling was implemented using Tailwind CSS to create a responsive and user-friendly interface.
+
+5. Optimization: Code structure and performance considerations were applied to ensure the application runs efficiently and remains scalable.
+
+
+# Author
+
+Kolawole Mayowa (Frontend Engineer)
