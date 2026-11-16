@@ -14,11 +14,30 @@ interface ProductHandler {
   isLoading: boolean;
 }
 
+interface Filter {
+  name: string;
+  category: string;
+  price: string;
+}
+
 export default function Home() {
   //   const devices: { name: string; value: string } = [];
   //   const prices: { name: string; value: string } = [];
   const [product, setProduct] = useState<Product | null>(null);
+  const [filteredData, setFilteredData] = useState<Product[]>([]);
   const [showProductModal, setShowProductModal] = useState<boolean>(false);
+  const [filter, setFilter] = useState<Filter>({
+    name: "",
+    category: "all",
+    price: "any",
+  });
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFilter((prev) => ({ ...prev, [name]: value }));
+  };
 
   const [products, setProducts] = useState<ProductHandler>({
     data: null,
@@ -60,6 +79,57 @@ export default function Home() {
     if (!product) return;
     setShowProductModal(true);
   }, [product]);
+
+  useEffect(() => {
+    if (!products.data) return;
+    setFilteredData(products.data);
+    setFilter({
+      name: "",
+      category: "all",
+      price: "any",
+    });
+  }, [products]);
+
+  useEffect(() => {
+    if (!products.data) return;
+    //filter by default
+    if (
+      filter.name === "" &&
+      filter.category === "all" &&
+      filter.price === "any"
+    ) {
+      setFilteredData(products.data);
+      return;
+    }
+    //filter by name alone
+    if (
+      filter.name.toLowerCase() !== "" &&
+      filter.category === "all" &&
+      filter.price === "any"
+    ) {
+        console.log("Reading...")
+      const results = products.data?.filter((product) =>
+        product.title.toLowerCase().includes(filter.name.toLowerCase()),
+      );
+      setFilteredData(results);
+      return;
+    }
+    //filter by name and category and price
+    // if (search.keyword.toLowerCase() !== "" && search.grade !== "all") {
+    //   const results = employees.data?.filter(
+    //     (staff) =>
+    //       staff.name.toLowerCase().includes(search.keyword.toLowerCase()) &&
+    //       staff.gradeLevel?.id === search.grade,
+    //   );
+    //   setData(results);
+    //   return;
+    // }
+    // //grade alone
+    // const results = employees.data?.filter(
+    //   (staff) => staff.gradeLevel?.id === search.grade,
+    // );
+    // setData(results);
+  }, [filter]);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -114,7 +184,9 @@ export default function Home() {
               className="flex w-full border px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-12 rounded-md border-border pl-11"
               aria-label="Search devices by name"
               placeholder="Search devices…"
-              value=""
+              value={filter.name}
+              onChange={handleChange}
+              name="name"
               title="Search"
             />
             <Search className="absolute left-3 top-3" />
@@ -122,7 +194,7 @@ export default function Home() {
           {/* type of device */}
           <div className="relative">
             <select className="border px-3 py-1 rounded-md h-12 appearance-none cursor-pointer w-full">
-              <option>All devices</option>
+              <option value={"all"}>All categories</option>
               <option>Smartphones</option>
               <option>Laptops</option>
               <option>Tablets</option>
@@ -133,7 +205,7 @@ export default function Home() {
           {/* price */}
           <div className="relative">
             <select className="border px-3 py-1 rounded-md h-12 appearance-none cursor-pointer w-full">
-              <option>Any price</option>
+              <option value={"any"}>Any price</option>
               <option>Under $500</option>
               <option>$500 - $1000</option>
               <option>Over $1000</option>
@@ -151,12 +223,12 @@ export default function Home() {
         <div className="p-5 flex items-center justify-center h-50">
           <p>Error: {products.error}</p>
         </div>
-      ) : products.data?.length === 0 ? (
+      ) : filteredData.length === 0 ? (
         <div className="p-5 flex items-center justify-center h-50">
           No products. Please check back.
         </div>
       ) : (
-        <Products setProduct={setProduct} products={products.data ?? []} />
+        <Products setProduct={setProduct} products={filteredData} />
       )}
       {showProductModal && (
         <ProductDetailsModal product={product} onClose={onClose} />
