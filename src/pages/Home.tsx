@@ -143,12 +143,23 @@ export default function Home() {
         </div>
       </section>
       {/* devices */}
-      <Products setProduct={setProduct} products={products.data ?? []} />
+      {products.isLoading ? (
+        <div className="p-5 flex items-center justify-center h-50">
+          <p>Getting products...</p>
+        </div>
+      ) : products.error ? (
+        <div className="p-5 flex items-center justify-center h-50">
+          <p>Error: {products.error}</p>
+        </div>
+      ) : products.data?.length === 0 ? (
+        <div className="p-5 flex items-center justify-center h-50">
+          No products. Please check back.
+        </div>
+      ) : (
+        <Products setProduct={setProduct} products={products.data ?? []} />
+      )}
       {showProductModal && (
-        <ProductDetailsModal
-          product={product}
-          onClose={onClose}
-        />
+        <ProductDetailsModal product={product} onClose={onClose} />
       )}
       <Footer />
     </main>
