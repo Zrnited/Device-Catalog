@@ -41,6 +41,11 @@ export default function Home() {
     }
   };
 
+  const onClose = () => {
+    setShowProductModal(false);
+    setProduct(null);
+  };
+
   useEffect(() => {
     let cancelled = false;
     fetchDevices(cancelled);
@@ -139,7 +144,12 @@ export default function Home() {
       </section>
       {/* devices */}
       <Products setProduct={setProduct} products={products.data ?? []} />
-      {showProductModal && <ProductDetailsModal product={product ?? {} as Product} />}
+      {showProductModal && (
+        <ProductDetailsModal
+          product={product}
+          onClose={onClose}
+        />
+      )}
       <Footer />
     </main>
   );
