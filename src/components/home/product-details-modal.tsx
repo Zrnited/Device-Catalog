@@ -27,6 +27,9 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
     phoneNumber: "",
     prm: "3 months",
   });
+  const [highlightedImg, setHighlightedImg] = useState<string>(
+    product ? (product.images.length > 0 ? product.images[0] : "") : "",
+  );
 
   const [successMsg, setSuccessMsg] = useState<boolean>(false);
   const [formErrs, setFormErrs] = useState<FormErrs>({
@@ -79,16 +82,34 @@ export default function ProductDetailsModal({ product, onClose }: Props) {
             <div className="space-y-2">
               <div className="bg-[#072320]/5 rounded-md w-full h-100 lg:h-80 flex items-center justify-center">
                 <img
-                  src={product ? product?.images[0] : ""}
+                  //   src={product ? product?.images[0] : ""}
+                  src={highlightedImg}
                   alt="product"
                   decoding="async"
                   loading="lazy"
                   draggable={false}
-                  className="w-[70%] h-fit"
+                  className="w-[70%] h-fit cursor-pointer"
                 />
               </div>
               {/* image list */}
-              <div></div>
+              {product && product?.images.length > 0 && (
+                <div className="flex gap-x-2 flex-wrap">
+                  {product.images.map((img, index) => {
+                    return (
+                      <img
+                        draggable={false}
+                        key={index}
+                        title="image"
+                        decoding="async"
+                        loading="lazy"
+                        src={img}
+                        onClick={() => setHighlightedImg(img)}
+                        className="w-10 h-auto rounded-md border cursor-pointer hover:scale-105 transition ease-in-out delay-100"
+                      />
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <div className="space-y-2">
               <h1 className="text-black font-grotesk font-semibold">
